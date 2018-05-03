@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+
+
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+
+    <style type="text/css">
+        .platform-ios .manual-ios-statusbar-padding {
+            padding-top: 20px;
+        }
+        
+        .manual-remove-top-padding {
+            padding-top: 0px;
+        }
+        
+        .manual-remove-top-padding .scroll {
+            padding-top: 0px !important;
+        }
+        
+        ion-list.manual-list-fullwidth div.list,
+        .list.card.manual-card-fullwidth {
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+        
+        ion-list.manual-list-fullwidth div.list > .item,
+        .list.card.manual-card-fullwidth > .item {
+            border-radius: 0px;
+            border-left: 0px;
+            border-right: 0px;
+        }
+        
+        .show-list-numbers-and-dots ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        
+        .show-list-numbers-and-dots ol {
+            list-style-type: decimal;
+            padding-left: 40px;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/routes.js"></script>
+
+    <script src="js/directives.js"></script>
+    <script src="js/services.js"></script>
+
+    <!-- Only required for Tab projects w/ pages in multiple tabs 
+    <script src="lib/ionicuirouter/ionicUIRouter.js"></script>
+    -->
+
+</head>
+
+<body ng-app="app" animation="slide-left-right-ios7">
+    <script>
+        function masb_calcular() {
+            //pega os valores das variaves para jogar no banco
+
+
+
+            var masb_nome = document.getElementById("masb_idnome").value;
+            var masb_data = document.getElementById("masb_idnasc").value;
+            var masb_sexo = document.getElementById("masb_idsexo").value;
+
+
+            //Calculo do imc
+            var masb_peso = document.getElementById("masb_idpeso").value;
+            var masb_altura = document.getElementById("masb_idaltura").value;
+
+            var masb_imc = masb_peso / (masb_altura * masb_altura);
+
+            var masb_classificacao;
+
+            if (masb_imc < 17) {
+                masb_classificacao = "Muito abaixo do peso";
+            } else if (masb_imc >= 17 && masb_imc <= 18.49) {
+                masb_classificacao = "Abaixo do peso";
+            } else if (masb_imc >= 18.5 && masb_imc <= 24.99) {
+                masb_classificacao = "Peso normal";
+            } else if (masb_imc >= 25 && masb_imc <= 29.99) {
+                masb_classificacao = "Acima do peso";
+            } else if (masb_imc > 30 && masb_imc <= 34.99) {
+                masb_classificacao = "Obesidade I";
+            } else if (masb_imc >= 35 && masb_imc <= 39.99) {
+                masb_classificacao = "Obesidade II";
+            } else {
+                masb_classificacao = "Obesidade III";
+            }
+
+            document.getElementById("masb_imc").value = masb_imc;
+            document.getElementById("masb_classificacao").value = masb_classificacao;
+
+
+            //Joga no banco PUT
+            var url = "http://localhost:8080/masb_prova/wr/masb_Jogadores";
+            var xmlhttp_put = new XMLHttpRequest();
+            xmlhttp_put.open("PUT", url, true);
+            xmlhttp_put.setRequestHeader('Content-type', 'application/json');
+            xmlhttp_put.send('{"masb_altura":' + masb_altura + ',"masb_classificacao":"' + masb_classificacao + '","masb_dataNascimento":"' + masb_data + '","masb_imc":' + masb_imc + ',"masb_nome":"' + masb_nome + '","masb_peso":' + masb_peso + ',"masb_sexo":"' + masb_sexo + '"}');
+
+        }
+    </script>
+    <script>
+        function masb_mostrar() {
+
+            //Pegar no banco GET
+            var xmlhttp_Get = new XMLHttpRequest();
+
+            var url_Get = "http://localhost:8080/masb_prova/wr/masb_Jogadores";
+
+            xmlhttp_Get.onreadystatechange = function () {
+                if (xmlhttp_Get.readyState == 4 && xmlhttp_Get.status == 200) {
+                    var myArr = JSON.parse(xmlhttp_Get.responseText);
+                    myFunction(myArr);
+                }
+            };
+
+            xmlhttp_Get.open("GET", url_Get, true);
+            xmlhttp_Get.send();
+
+
+            function myFunction(arr) {
+                var out = '<div></div>';
+                var i;
+                for (i = 0; i < arr.length; i++) {
+                    out += '<div class="upage vertical-col left" id="mainpage"><div class="list-group widget uib_w_1 d-margins" data-uib="twitter%20bootstrap/list_group" data-ver="1"><a class="list-group-item allow-badge widget uib_w_2" data-uib="twitter%20bootstrap/list_item" data-ver="1"><table><tr><td><h3 class="list-group-item-heading">' + arr[i].masb_nome + '</h3></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading">Data Nascimento:</h4><p class="list-group-item-text">' + arr[i].masb_dataNascimento + '</p></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading">Sexo:</h4><p class="list-group-item-text">' + arr[i].masb_sexo + '</p></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading">Altura:</h4><p class="list-group-item-text">' + arr[i].masb_altura + '</p></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading">Peso:</h4><p class="list-group-item-text">' + arr[i].masb_peso + '</p></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading">IMC:</h4><p class="list-group-item-text">' + arr[i].masb_imc + '</p></a></td></tr><tr><td><a class="list-group-item allow-badge widget uib_w_3" data-uib="twitter%20bootstrap/list_item" data-ver="1"><h4 class="list-group-item-heading"> Classificação:</h4><p class="list-group-item-text">' + arr[i].masb_classificacao + '</p></a></td></tr></table></div></div><div class="spacer" style="width: 300px; height: 50px;"></div>';
+                }
+                document.getElementById("listaDeAtletas-container3").innerHTML = out;
+            }
+        }
+    </script>
+    
+
+    <div>
+        <div>
+            <ion-nav-bar class="bar-light">
+                <ion-nav-back-button></ion-nav-back-button>
+            </ion-nav-bar>
+            <ion-nav-view></ion-nav-view>
+        </div>
+    </div>
+</body>
+
+</html>

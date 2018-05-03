@@ -1,0 +1,50 @@
+<ion-view title="Calculo IMC" id="page2">
+    <ion-content padding="true" class="has-header">
+        <form id="calculoIMC-form3" class="list">
+            <label class="item item-input">
+        <span class="input-label">Nome:</span>
+        <input id="masb_idnome" type="text" placeholder="Insira o seu nome">
+      </label>
+            <div class="spacer" style="width: 300px; height: 20px;"></div>
+            <label class="item item-input item-stacked-label" id="calculoIMC-input4">
+        <span class="input-label">Data de Nascimento:</span>
+        <input id="masb_idnasc" type="text" placeholder="">
+      </label>
+            <div class="spacer" style="width: 300px; height: 20px;"></div>
+            <label class="item item-input">
+        <span class="input-label">Sexo:</span>
+        <input id="masb_idsexo" type="text" placeholder="Digite o seu sexo">
+      </label>
+
+
+            <div class="spacer" style="width: 300px; height: 20px;"></div>
+            <label class="item item-input">
+        <span class="input-label">Altura:</span>
+        <input id="masb_idaltura" type="number" placeholder="Insira a altura">
+      </label>
+            <div class="spacer" style="width: 300px; height: 20px;"></div>
+            <label class="item item-input">
+        <span class="input-label">Peso:</span>
+        <input id="masb_idpeso" type="number" placeholder="Insira o peso">
+      </label>
+        </form>
+        <button class="button button-dark button-block" onclick="masb_calcular()">Calcular IMC</button>
+       
+        <div class="spacer" style="width: 300px; height: 35px;"></div>
+        <h4 id="calculoIMC-heading2" style="color:#000000;">Resultados:</h4>
+        <label class="item item-input">
+      <span class="input-label">IMC calculado:</span>
+      <input id="masb_imc" type="number" placeholder="">
+    </label>
+        <form id="calculoIMC-form6" class="list">
+            <label class="item item-input">
+        <span class="input-label">Classificação do IMC:</span>
+        <input id="masb_classificacao" type="text" placeholder={{sexo}}>
+            
+      </label>
+
+           
+            
+        </form>
+    </ion-content>
+</ion-view>
